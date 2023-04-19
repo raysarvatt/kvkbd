@@ -1,0 +1,3 @@
+[submodule "aur"]
+	path = dist/aur
+	url = https://aur.archlinux.org/kvkbd.git
