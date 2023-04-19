@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
   
-<layout name="standart">
+<layout name="standard">
     <buttonWidth width="25">
       <item name="Esc" width="30"/>
       <item name="FKey" width="20"/>

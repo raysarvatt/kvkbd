@@ -1,5 +1,4 @@
 #include "vbutton.h"
-#include <QPainter>
 
 #define TIMER_INTERVAL_SHORT 40
 #define TIMER_INTERVAL_LONG  200
@@ -11,12 +10,10 @@ int VButton::RepeatLongDelay = TIMER_INTERVAL_LONG;
 VButton::VButton(QWidget *parent) :
     QPushButton(parent)
 {
-
     setFocusPolicy(Qt::NoFocus);
     setAttribute(Qt::WA_AlwaysShowToolTips);
 
     keyCode = 0;
-
     rightClicked = false;
     mTextIndex = 0;
     isCaps = false;
@@ -24,7 +21,6 @@ VButton::VButton(QWidget *parent) :
     keyTimer = new QTimer(this);
 
     connect(keyTimer, SIGNAL(timeout()), this, SLOT(repeatKey()));
-
 }
 
 void VButton::storeSize()
@@ -126,13 +122,11 @@ void VButton::sendKey()
 void VButton::mousePressEvent(QMouseEvent *e)
 {
 
+    QPushButton::mousePressEvent(e);
     rightClicked = false;
     if (e->button() == Qt::RightButton) {
-
         rightClicked = true;
-
     }
-    QPushButton::mousePressEvent(e);
 
     if (this->keyCode>0) {
         sendKey();

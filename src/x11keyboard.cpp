@@ -104,6 +104,7 @@ void X11Keyboard::processKeyPress(unsigned int keyCode)
     groupTimer->start();
 
 }
+
 void X11Keyboard::sendKey(unsigned int keycode)
 {
     Window currentFocus;

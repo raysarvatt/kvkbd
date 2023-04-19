@@ -30,3 +30,6 @@ target_link_libraries(kvkbd Qt5::Core Qt5::Gui Qt5::Xml Qt5::Widgets Qt5::DBus Q
 install(TARGETS kvkbd ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES kvkbd.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR})
+
+add_subdirectory( colors )
+add_subdirectory( themes )
