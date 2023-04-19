@@ -32,7 +32,7 @@
 static const char description[] =
     I18N_NOOP("A virtual keyboard for KDE");
 
-static QString version = QStringLiteral("0.7.3");
+static QString version = QStringLiteral("0.8.0");
 
 #include <X11/Xlib.h>
 
