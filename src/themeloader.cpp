@@ -98,38 +98,22 @@ void ThemeLoader::loadColorStyle()
 }
 void ThemeLoader::findColorStyles(QMenu *colors, const QString& configSelectedStyle)
 {
-    QStringList dirs = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
     QActionGroup *color_group = new QActionGroup(colors);
     color_group->setExclusive(true);
     colors->setTitle("Color Style");
     colors->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-color")));
-    QListIterator<QString> itr(dirs);
+
+    QDir colors_dir(":/colors", "*.css", QDir::Name, QDir::Files | QDir::Readable);
+    QFileInfoList list = colors_dir.entryInfoList();
+    QListIterator<QFileInfo> itr(list);
     while (itr.hasNext()) {
-        QString data_path = itr.next() + "/colors";
-
-        QFileInfo info(data_path);
-        if (info.isDir() && info.isReadable()) {
-            QDir colors_dir(info.absoluteFilePath(), "*.css");
-            QFileInfoList list = colors_dir.entryInfoList();
-
-            QListIterator<QFileInfo> itr(list);
-            while (itr.hasNext()) {
-                QFileInfo fileInfo = itr.next();
-                //std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
-                //				    .arg(fileInfo.fileName()));
-                //std::cout << std::endl;
-
-                QAction *item = new QAction(colors);
-                item->setCheckable(true);
-
-                item->setText(fileInfo.baseName());
-                item->setData(fileInfo.absoluteFilePath());
-                colors->addAction(item);
-                color_group->addAction(item);
-
-
-            }
-        }
+        QFileInfo fileInfo = itr.next();
+         QAction *item = new QAction(colors);
+        item->setCheckable(true);
+        item->setText(fileInfo.baseName());
+        item->setData(fileInfo.absoluteFilePath());
+        colors->addAction(item);
+        color_group->addAction(item);
     }
 
     QString selectedStyle = configSelectedStyle;
