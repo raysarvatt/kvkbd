@@ -2,6 +2,7 @@
  * This file is part of the Kvkbd project.
  * Copyright (C) 2007-2014 Todor Gyumyushev <yodor1@gmail.com>
  * Copyright (C) 2008 Guillaume Martres <smarter@ubuntu.com>
+ * Copyright (C) 2020–2023 Anthony Fieroni, Fredrick R. Brennan and Kvkbd Developers
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,13 +32,13 @@
 static const char description[] =
     I18N_NOOP("A virtual keyboard for KDE");
 
-static QString version = QStringLiteral("0.7.2");
+static QString version = QStringLiteral("0.7.3");
 
 #include <X11/Xlib.h>
 
 void findLoginWindow()
 {
-	unsigned int numkids, i,mapped,scrn;
+	unsigned int numkids, i, scrn;
 	Window r, p;
 	Window *kids=0;
 	//XWindowAttributes attr;
@@ -51,7 +52,6 @@ void findLoginWindow()
 	scrn = DefaultScreen(dipsy);
 	root = RootWindow(dipsy, scrn);
 
-	mapped = 0;
 	XQueryTree(dipsy, root, &r, &p, &kids, &numkids);
 
 
@@ -75,11 +75,14 @@ int main(int argc, char **argv)
 {
     KvkbdApp app(argc, argv);
 
+    KLocalizedString::setApplicationDomain("kvkbd");
     KAboutData about(QStringLiteral("kvkbd"), i18n("Kvkbd"), version, i18n(description),
-                     KAboutLicense::LGPL_V3, i18n("(C) 2007-2014 The Kvkbd Developers"));
+                     KAboutLicense::LGPL_V3, i18n("(C) 2007-2023 The Kvkbd Developers"));
     about.addAuthor(i18n("Todor Gyumyushev"), i18n("Original Author"), "yodor1@gmail.com");
     about.addAuthor(i18n("Guillaume Martres"), i18n("KDE4 port"), "smarter@ubuntu.com");
-    about.setProgramIconName("preferences-desktop-keyboard");
+    about.addAuthor(i18n("Anthony Fieroni"), i18n("Qt5 port"), "bvbfan@abv.bg");
+    about.addAuthor(i18n("Fredrick R. Brennan"), i18n("General maintenance"), "copypaste@kittens.ph");
+    QApplication::setWindowIcon(QIcon::fromTheme("preferences-desktop-keyboard"));
 
     KAboutData::setApplicationData(about);
 

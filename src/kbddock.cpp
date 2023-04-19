@@ -2,6 +2,7 @@
  * This file is part of the Kvkbd project.
  * Copyright (C) 2007-2014 Todor Gyumyushev <yodor1@gmail.com>
  * Copyright (C) 2008 Guillaume Martres <smarter@ubuntu.com>
+ * Copyright (C) 2020–2023 Anthony Fieroni, Fredrick R. Brennan and Kvkbd Developers
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +24,8 @@
 
 #include <QDBusConnection>
 #include <QPainter>
+#include <QGuiApplication>
+#include <QScreen>
 #include <QWidget>
 #include <QMouseEvent>
 
@@ -57,9 +60,9 @@ KbdDock::~KbdDock()
 
 void KbdDock::paintEvent(QPaintEvent *)
 {
-    QPixmap pix = QPixmap::grabWindow(wID);
-    QPainter p(this);
-    p.drawPixmap(0, 0, pix.scaled(width(), height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+     QPixmap pix = QGuiApplication::primaryScreen()->grabWindow(wID);
+     QPainter p(this);
+     p.drawPixmap(0, 0, pix.scaled(width(), height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 }
 
 void KbdDock::mouseReleaseEvent(QMouseEvent *ev)

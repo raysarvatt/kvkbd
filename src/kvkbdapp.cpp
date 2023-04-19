@@ -2,6 +2,7 @@
  * This file is part of the Kvkbd project.
  * Copyright (C) 2007-2014 Todor Gyumyushev <yodor1@gmail.com>
  * Copyright (C) 2008 Guillaume Martres <smarter@ubuntu.com>
+ * Copyright (C) 2020–2023 Anthony Fieroni, Fredrick R. Brennan and Kvkbd Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +32,7 @@
 #include <QAction>
 #include <QFileInfo>
 #include <QDir>
+#include <QScreen>
 
 #include <KAboutData>
 #include <KConfig>
@@ -158,9 +160,7 @@ void KvkbdApp::initGui(bool loginhelper)
     widget->setProperty("layout", themeName);
 
     QSize defaultSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
-    QDesktopWidget *pDesktop = QApplication::desktop();
-
-    QRect screenGeometry = pDesktop->availableGeometry(pDesktop->underMouse());
+    QRect screenGeometry = QApplication::screens()[QApplication::desktop()->screenNumber()]->availableGeometry();
     qDebug() << "ScreenGeometry: " << screenGeometry;
 
     QPoint bottomRight = screenGeometry.bottomRight()-QPoint(defaultSize.width(), defaultSize.height());
@@ -296,7 +296,7 @@ void KvkbdApp::buttonLoaded(VButton *btn)
     if (bAction.length()>0) {
         connect(btn, SIGNAL(clicked()), signalMapper, SLOT(map()));
         signalMapper->setMapping(btn, bAction);
-        actionButtons.insertMulti(bAction, btn);
+        actionButtons.insert(bAction, btn);
     }
 
     QString tooltip = btn->property("tooltip").toString();
@@ -383,5 +383,3 @@ void KvkbdApp::toggleExtension()
         prt->show();
     }
 }
-
-#include "kvkbdapp.moc"

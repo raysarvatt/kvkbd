@@ -1,8 +1,4 @@
 #include "mainwidget.h"
-
-#include <QObjectList>
-#include <QList>
-
 #include "vbutton.h"
 
 
@@ -73,11 +69,15 @@ void MainWidget::textSwitch(bool setShift)
     }
 
 }
-void MainWidget::updateLayout(int index, QString layout_name)
+void MainWidget::updateLayout(int layout_idx, QString layout_name)
 {
     QObjectList buttons = this->children();
 
     VKeyboard *vkbd = (VKeyboard*)QObject::sender();
+
+    if (layout_idx > 0) {
+        qDebug() << "Ignoring layout_idx " << layout_idx;
+    }
 
     for (int a=0; a<buttons.count(); a++) {
 
@@ -126,4 +126,3 @@ void MainWidget::updateFont(const QFont& widgetFont)
     this->setStyleSheet(buttonStyle);
 
 }
-#include "mainwidget.moc"

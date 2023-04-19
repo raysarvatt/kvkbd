@@ -1,6 +1,7 @@
 /*
  * <one line to give the library's name and an idea of what it does.>
  * Copyright (C) 2014  Todor <email>
+ * Copyright (C) 2020–2023 Anthony Fieroni, Fredrick R. Brennan and Kvkbd Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -422,5 +423,3 @@ void ThemeLoader::loadKeys(MainWidget *vPart, const QDomNode& wNode)
     emit partLoaded(vPart, total_rows, total_cols);
 
 }
-
-#include "themeloader.moc"
