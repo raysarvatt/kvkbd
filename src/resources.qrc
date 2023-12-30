@@ -1,6 +1,9 @@
-<RCC>
-    <qresource prefix="/theme">
-    <file>standart.xml</file>
-    <file>standart.css</file>
-    </qresource>
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>themes/standard.xml</file>
+    <file>colors/simple.css</file>
+    <file>colors/legacy.css</file>
+    <file>colors/light.css</file>
+    <file>colors/dark.css</file>
+</qresource>
 </RCC>

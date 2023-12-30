@@ -74,7 +74,7 @@ protected:
 
     QGridLayout *layout = nullptr;
 
-    QMap<QString, VButton*> actionButtons;
+    QMultiMap<QString, VButton*> actionButtons;
 
     ThemeLoader *themeLoader = nullptr;
 

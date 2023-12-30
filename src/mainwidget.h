@@ -1,6 +1,9 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include <QDebug>
+#include <QObjectList>
+#include <QList>
 #include <QWidget>
 #include <QString>
 #include <QFont>
@@ -22,7 +25,7 @@ signals:
 
 public slots:
     void textSwitch(bool);
-    void updateLayout(int index, QString layout_name);
+    void updateLayout(__attribute__((unused)) int _layout_index, QString layout_name);
     void updateGroupState(const ModifierGroupStateMap&);
     void updateFont(const QFont& widgetFont);
 

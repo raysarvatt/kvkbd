@@ -2,6 +2,7 @@
  * This file is part of the Kvkbd project.
  * Copyright (C) 2007-2014 Todor Gyumyushev <yodor1@gmail.com>
  * Copyright (C) 2008 Guillaume Martres <smarter@ubuntu.com>
+ * Copyright (C) 2020–2023 Anthony Fieroni, Fredrick R. Brennan and Kvkbd Developers
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +28,7 @@
 KbdTray::KbdTray(QWidget* parent) : QSystemTrayIcon(parent)
 {
     setObjectName("KvkbdTray");
-    setIcon(KIconLoader::global()->loadIcon("tray.png", KIconLoader::User));
+    setIcon(KIconLoader::global()->loadIcon("input-keyboard", KIconLoader::Small));
 
     setContextMenu(new QMenu);
     contextMenu()->setTitle("Kvkbd");

@@ -1,6 +1,7 @@
 /*
  * <one line to give the library's name and an idea of what it does.>
  * Copyright (C) 2014  Todor <email>
+ * Copyright (C) 2020–2023 Anthony Fieroni, Fredrick R. Brennan and Kvkbd Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,7 +40,7 @@ using namespace std;
 int defaultWidth = 25;
 int defaultHeight = 25;
 
-#define DEFAULT_CSS ":/theme/standart.css"
+#define DEFAULT_CSS ":/colors/standard.css"
 
 ThemeLoader::ThemeLoader(QWidget *parent) : QObject(parent)
 {
@@ -53,17 +54,17 @@ void ThemeLoader::loadTheme(QString& themeName)
 {
     bool loading = true;
     while (loading) {
-        int ret = this->loadLayout(themeName, ":/theme/");
+        int ret = this->loadLayout(themeName, ":/themes/");
 
         if (ret == 0) {
             break;
         }
         //bail out
-        else if (QString::compare(themeName, "standart")==0) {
+        else if (QString::compare(themeName, "standard")==0) {
             loading = false;
             qApp->quit();
         } else {
-            themeName = "standart";
+            themeName = "standard";
         }
     }
 }
@@ -97,47 +98,22 @@ void ThemeLoader::loadColorStyle()
 }
 void ThemeLoader::findColorStyles(QMenu *colors, const QString& configSelectedStyle)
 {
-    QStringList dirs = QStandardPaths::locateAll(QStandardPaths::ApplicationsLocation, "kvkbd");
-
     QActionGroup *color_group = new QActionGroup(colors);
     color_group->setExclusive(true);
-
-    QAction *item = new QAction(colors);
-    item->setCheckable(true);
-    item->setText("standart");
-    item->setData(":/theme/standart.css");
-    colors->addAction(item);
-    color_group->addAction(item);
-
     colors->setTitle("Color Style");
     colors->setIcon(QIcon("preferences-desktop-color"));
-    QListIterator<QString> itr(dirs);
+
+    QDir colors_dir(":/colors", "*.css", QDir::Name, QDir::Files | QDir::Readable);
+    QFileInfoList list = colors_dir.entryInfoList();
+    QListIterator<QFileInfo> itr(list);
     while (itr.hasNext()) {
-        QString data_path = itr.next() + "colors";
-
-        QFileInfo info(data_path);
-        if (info.isDir() && info.isReadable()) {
-            QDir colors_dir(info.absoluteFilePath(), "*.css");
-            QFileInfoList list = colors_dir.entryInfoList();
-
-            QListIterator<QFileInfo> itr(list);
-            while (itr.hasNext()) {
-                QFileInfo fileInfo = itr.next();
-                //std::cout << qPrintable(QString("%1 %2").arg(fileInfo.size(), 10)
-                //				    .arg(fileInfo.fileName()));
-                //std::cout << std::endl;
-
-                QAction *item = new QAction(this);
-                item->setCheckable(true);
-
-                item->setText(fileInfo.baseName());
-                item->setData(fileInfo.absoluteFilePath());
-                colors->addAction(item);
-                color_group->addAction(item);
-
-
-            }
-        }
+        QFileInfo fileInfo = itr.next();
+        QAction *item = new QAction(this);
+        item->setCheckable(true);
+        item->setText(fileInfo.baseName());
+        item->setData(fileInfo.absoluteFilePath());
+        colors->addAction(item);
+        color_group->addAction(item);
     }
 
     QString selectedStyle = configSelectedStyle;
@@ -161,7 +137,6 @@ void ThemeLoader::findColorStyles(QMenu *colors, const QString& configSelectedSt
         selectedAction->trigger();
     }
 }
-
 
 int ThemeLoader::loadLayout(const QString& themeName, const QString& path)
 {
@@ -422,5 +397,3 @@ void ThemeLoader::loadKeys(MainWidget *vPart, const QDomNode& wNode)
     emit partLoaded(vPart, total_rows, total_cols);
 
 }
-
-#include "themeloader.moc"

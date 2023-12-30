@@ -1,13 +1,14 @@
 #ifndef VBUTTON_H
 #define VBUTTON_H
 
+#include <QDomNode>
+#include <QMouseEvent>
+#include <QPainter>
 #include <QPushButton>
 #include <QRect>
 #include <QSize>
 #include <QString>
-#include <QMouseEvent>
 #include <QTimer>
-#include <QDomNode>
 #include "x11keyboard.h"
 
 class VButton : public QPushButton

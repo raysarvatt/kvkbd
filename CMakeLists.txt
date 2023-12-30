@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.16)
+cmake_policy(SET CMP0063 NEW)
 
 project(kvkbd)
 
@@ -35,6 +36,3 @@ find_package(LibXslt REQUIRED)
 
 add_subdirectory( doc )
 add_subdirectory( src )
-add_subdirectory( pics )
-add_subdirectory( colors )
-add_subdirectory( themes )
