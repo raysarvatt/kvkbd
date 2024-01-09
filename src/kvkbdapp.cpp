@@ -96,7 +96,7 @@ void KvkbdApp::initGui(bool loginhelper)
 
     QMenu *cmenu = tray->contextMenu();
 
-    QAction *chooseFontAction = new QAction(QIcon("preferences-desktop-font"), i18nc("@action:inmenu", "Choose Font..."), this);
+    QAction *chooseFontAction = new QAction(QIcon::fromTheme(QStringLiteral("preferences-desktop-font")), i18nc("@action:inmenu", "Choose Font..."), this);
     connect(chooseFontAction, SIGNAL(triggered(bool)), this, SLOT(chooseFont()));
     cmenu->addAction(chooseFontAction);
 
@@ -149,9 +149,10 @@ void KvkbdApp::initGui(bool loginhelper)
     connect(themeLoader, SIGNAL(colorStyleChanged()), dock, SLOT(repaint()));
 
     KHelpMenu *helpMenu = new KHelpMenu(widget, KAboutData::applicationData());
+    helpMenu->menu()->setIcon(QIcon::fromTheme(QStringLiteral("help-about")));
     cmenu->addMenu((QMenu*)helpMenu->menu());
 
-    QAction *quit = new QAction(QIcon("quit"), i18nc("@action:inmenu", "Quit"), this);
+    QAction *quit = new QAction(QIcon::fromTheme(QStringLiteral("application-exit")), i18nc("@action:inmenu", "Quit"), this);
     cmenu->addAction(quit);
     connect(quit,SIGNAL(triggered(bool)), this, SLOT(quit()));
 

@@ -101,7 +101,7 @@ void ThemeLoader::findColorStyles(QMenu *colors, const QString& configSelectedSt
     QActionGroup *color_group = new QActionGroup(colors);
     color_group->setExclusive(true);
     colors->setTitle("Color Style");
-    colors->setIcon(QIcon("preferences-desktop-color"));
+    colors->setIcon(QIcon::fromTheme(QStringLiteral("preferences-desktop-color")));
 
     QDir colors_dir(":/colors", "*.css", QDir::Name, QDir::Files | QDir::Readable);
     QFileInfoList list = colors_dir.entryInfoList();
