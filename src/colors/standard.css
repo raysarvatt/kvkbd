@@ -10,18 +10,15 @@ VButton {
     border-style: outset;
     border-radius: 5px;
     border-width: 1px;
-    
+
     font-size:13px;
     font-weight:bold;
-    
 }
 
 VButton:pressed {
-    
     border-style: inset;
 }
 VButton:checked {
-    
     border-style: inset;
     border-width:2px;
 }
@@ -63,14 +60,14 @@ VButton[colorGroup="numeric"] {
     background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1, stop: 0 #9faaca, stop: 1 #9faaca);
 }
 VButton[action="toggleExtension"] {
-  background-color:gray;
-  border-color: gray;
+    background-color:gray;
+    border-color: gray;
 }
 VButton[action="toggleVisibility"] {
-  background-color:red;
-  border-color:red;
+    background-color:red;
+    border-color:red;
 }
 VButton[colorGroup="nextLayout"] {
-  background-color:none;
-  border:none;
+    background-color:none;
+    border:none;
 }

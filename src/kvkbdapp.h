@@ -45,7 +45,7 @@ public:
 
     void initGui(bool loginhelper = false);
 
-public slots:
+public Q_SLOTS:
     void keyProcessComplete(unsigned int);
 
     void buttonAction(const QString& action);
@@ -60,31 +60,20 @@ public slots:
     void buttonLoaded(VButton *btn);
 
 protected:
-
-    ResizableDragWidget *widget = nullptr;
-
-    KbdTray *tray = nullptr;
-
-
     QMap<QString, QString> colorMap;
     QMap<QString, MainWidget*> parts;
     QMap<QString, QRect> layoutPosition;
-
     QSignalMapper *signalMapper = nullptr;
-
-    QGridLayout *layout = nullptr;
-
     QMultiMap<QString, VButton*> actionButtons;
-
-    ThemeLoader *themeLoader = nullptr;
-
+    KbdTray *tray = nullptr;
     KbdDock *dock = nullptr;
-
     VKeyboard *xkbd = nullptr;
-
+    QGridLayout *layout = nullptr;
+    ThemeLoader *themeLoader = nullptr;
+    ResizableDragWidget *widget = nullptr;
     bool is_login = false;
 
-signals:
+Q_SIGNALS:
     void textSwitch(bool);
     void fontUpdated(const QFont& font);
     void startupCompleted();

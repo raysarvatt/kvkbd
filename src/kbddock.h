@@ -28,7 +28,6 @@
 #include <QPixmap>
 #include <QMouseEvent>
 
-
 class KbdDock : public DragWidget
 {
     Q_OBJECT
@@ -37,19 +36,16 @@ public:
     KbdDock(const WId& window);
     ~KbdDock();
 
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
     void setPixmap(const QPixmap& pm);
 
-signals:
+Q_SIGNALS:
     void requestVisibility();
 
-
 protected:
-    void mouseReleaseEvent(QMouseEvent *ev);
+    void mouseReleaseEvent(QMouseEvent *ev) override;
     WId wID;
-
     QPixmap pm;
-
 };
 
 #endif // KBDDOCK_H

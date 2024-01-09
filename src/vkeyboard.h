@@ -38,19 +38,19 @@ class VKeyboard : public QObject
     Q_OBJECT
 
 public:
-    VKeyboard(QObject *parent=0);
+    VKeyboard(QObject *parent = nullptr);
     virtual ~VKeyboard();
 
     virtual void textForKeyCode(unsigned int keyCode, ButtonText& text)=0;
 
-public slots:
+public Q_SLOTS:
     virtual void processKeyPress(unsigned int)=0;
     virtual void queryModState()=0;
     virtual void constructLayouts()=0;
     virtual void layoutChanged()=0;
     virtual void start()=0;
 
-signals:
+Q_SIGNALS:
     //key sent successfully
     void keyProcessComplete(unsigned int);
 

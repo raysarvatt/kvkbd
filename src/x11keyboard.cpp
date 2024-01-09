@@ -20,15 +20,10 @@
 
 #include "x11keyboard.h"
 
-
-
-#include <QX11Info>
-#include <QDesktopWidget>
 #include <QDBusConnection>
+#include <QDataStream>
 #include <QDBusInterface>
 #include <QDBusReply>
-
-
 
 #include <X11/extensions/XTest.h>
 #include <X11/Xlocale.h>
@@ -42,26 +37,23 @@
 #include "vbutton.h"
 extern QList<VButton *> modKeys;
 
-#include <iostream>
-using namespace std;
-
 X11Keyboard::X11Keyboard(QObject *parent): VKeyboard(parent)
 {
-    QString service = "";
-    QString path = "/Layouts";
-    QString interface = "org.kde.KeyboardLayouts";
+    QString service = QLatin1String("");
+    QString path = QLatin1String("/Layouts");
+    QString interface = QLatin1String("org.kde.KeyboardLayouts");
 
     QDBusConnection session = QDBusConnection::sessionBus();
 
-    session.connect(service, path, interface, "currentLayoutChanged", this, SLOT(layoutChanged()));
-    session.connect(service, path, interface, "layoutListChanged", this, SLOT(constructLayouts()));
+    session.connect(service, path, interface, QLatin1String("currentLayoutChanged"), this, SLOT(layoutChanged()));
+    session.connect(service, path, interface, QLatin1String("layoutListChanged"), this, SLOT(constructLayouts()));
 
     constructLayouts();
     groupTimer = new QTimer(parent);
     groupTimer->setInterval(250);
 
-    groupState.insert("capslock", this->queryModKeyState(XK_Caps_Lock));
-    groupState.insert("numlock", this->queryModKeyState(XK_Num_Lock));
+    groupState.insert(QLatin1String("capslock"), this->queryModKeyState(XK_Caps_Lock));
+    groupState.insert(QLatin1String("numlock"), this->queryModKeyState(XK_Num_Lock));
 
     connect(groupTimer, SIGNAL(timeout()), this, SLOT(queryModState()));
 }
@@ -73,15 +65,15 @@ X11Keyboard::~X11Keyboard()
 void X11Keyboard::start()
 {
     layoutChanged();
-    emit groupStateChanged(groupState);
+    Q_EMIT groupStateChanged(groupState);
     groupTimer->start();
 }
 
 void X11Keyboard::constructLayouts()
 {
-    QDBusInterface iface("org.kde.keyboard", "/Layouts", "org.kde.KeyboardLayouts", QDBusConnection::sessionBus());
+    QDBusInterface iface(QLatin1String("org.kde.keyboard"), QLatin1String("/Layouts"), QLatin1String("org.kde.KeyboardLayouts"), QDBusConnection::sessionBus());
 
-    QDBusReply<QStringList> reply = iface.call("getLayoutsList");
+    QDBusReply<QStringList> reply = iface.call(QLatin1String("getLayoutsList"));
     if (reply.isValid()) {
 
         QStringList lst = reply.value();
@@ -100,9 +92,8 @@ void X11Keyboard::processKeyPress(unsigned int keyCode)
 {
     groupTimer->stop();
     sendKey(keyCode);
-    emit keyProcessComplete(keyCode);
+    Q_EMIT keyProcessComplete(keyCode);
     groupTimer->start();
-
 }
 
 void X11Keyboard::sendKey(unsigned int keycode)
@@ -110,7 +101,7 @@ void X11Keyboard::sendKey(unsigned int keycode)
     Window currentFocus;
     int revertTo;
 
-    Display *display = QX11Info::display();
+    Display *display = XOpenDisplay(nullptr);
     XGetInputFocus(display, &currentFocus, &revertTo);
 
     QListIterator<VButton *> itr(modKeys);
@@ -132,6 +123,7 @@ void X11Keyboard::sendKey(unsigned int keycode)
         }
     }
     XFlush(display);
+    XCloseDisplay(display);
 }
 
 bool X11Keyboard::queryModKeyState(KeySym iKey)
@@ -141,7 +133,7 @@ bool X11Keyboard::queryModKeyState(KeySym iKey)
     int          iDummy3, iDummy4, iDummy5, iDummy6;
     unsigned int iMask;
 
-    Display* display = QX11Info::display();
+    Display* display = XOpenDisplay(nullptr);
 
     XModifierKeymap* map = XGetModifierMapping(display);
     KeyCode keyCode = XKeysymToKeycode(display, iKey);
@@ -153,6 +145,7 @@ bool X11Keyboard::queryModKeyState(KeySym iKey)
     }
     XQueryPointer(display, DefaultRootWindow(display), &wDummy1, &wDummy2, &iDummy3, &iDummy4, &iDummy5, &iDummy6, &iMask);
     XFreeModifiermap(map);
+    XCloseDisplay(display);
     return ((iMask & iKeyMask) != 0);
 }
 
@@ -162,15 +155,15 @@ void X11Keyboard::queryModState()
     bool curr_caps_state = this->queryModKeyState(XK_Caps_Lock);
     bool curr_num_state = this->queryModKeyState(XK_Num_Lock);
 
-    bool caps_state = groupState.value("capslock");
-    bool num_state = groupState.value("numlock");
+    bool caps_state = groupState.value(QLatin1String("capslock"));
+    bool num_state = groupState.value(QLatin1String("numlock"));
 
-    groupState.insert("capslock", curr_caps_state);
-    groupState.insert("numlock", curr_num_state);
+    groupState.insert(QLatin1String("capslock"), curr_caps_state);
+    groupState.insert(QLatin1String("numlock"), curr_num_state);
 
     if (curr_caps_state != caps_state || curr_num_state != num_state) {
 
-        emit groupStateChanged(groupState);
+        Q_EMIT groupStateChanged(groupState);
     }
 }
 
@@ -178,9 +171,9 @@ void X11Keyboard::layoutChanged()
 {
     //std::cerr << "LayoutChanged" << std::endl;
 
-    QDBusInterface iface("org.kde.keyboard", "/Layouts", "org.kde.KeyboardLayouts", QDBusConnection::sessionBus());
+    QDBusInterface iface(QLatin1String("org.kde.keyboard"), QLatin1String("/Layouts"), QLatin1String("org.kde.KeyboardLayouts"), QDBusConnection::sessionBus());
 
-    QDBusReply<QString> reply = iface.call("getCurrentLayout");
+    QDBusReply<QString> reply = iface.call(QLatin1String("getCurrentLayout"));
 
     if (reply.isValid()) {
 
@@ -188,10 +181,10 @@ void X11Keyboard::layoutChanged()
 
         layout_index = layouts.indexOf(current_layout);
 
-        emit layoutUpdated(layout_index, layouts.at(layout_index));
+        Q_EMIT layoutUpdated(layout_index, layouts.at(layout_index));
     } else {
         layout_index = 0;
-        emit layoutUpdated(0, QString("us"));
+        Q_EMIT layoutUpdated(0, QLatin1String("us"));
     }
 }
 void X11Keyboard::textForKeyCode(unsigned int keyCode,  ButtonText& text)
@@ -205,7 +198,8 @@ void X11Keyboard::textForKeyCode(unsigned int keyCode,  ButtonText& text)
 
     int keysyms_per_keycode = 0;
 
-    KeySym *keysym = XGetKeyboardMapping (QX11Info::display(), button_code, 1, &keysyms_per_keycode);
+    Display *display = XOpenDisplay(nullptr);
+    KeySym *keysym = XGetKeyboardMapping(display, button_code, 1, &keysyms_per_keycode);
 
     int index_normal = layout_index * 2;
     int index_shift = index_normal + 1;
@@ -226,5 +220,6 @@ void X11Keyboard::textForKeyCode(unsigned int keyCode,  ButtonText& text)
     text.append(normalText);
     text.append(shiftText);
 
-    XFree ((char *) keysym);
+    XFree((char *) keysym);
+    XCloseDisplay(display);
 }

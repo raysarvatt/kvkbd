@@ -20,8 +20,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-
-
 #include "kvkbdapp.h"
 #include <KAboutData>
 #include <KLocalizedString>
@@ -29,10 +27,7 @@
 #include <QCommandLineOption>
 #include <QCommandLineParser>
 
-static const char description[] =
-    I18N_NOOP("A virtual keyboard for KDE");
-
-static QString version = QStringLiteral("0.8.1");
+static QString version = QLatin1String("0.8.1");
 
 #include <X11/Xlib.h>
 
@@ -40,27 +35,25 @@ void findLoginWindow()
 {
 	unsigned int numkids, i, scrn;
 	Window r, p;
-	Window *kids=0;
-	//XWindowAttributes attr;
+	Window *kids = nullptr;
 	Window root;
-	Display *dipsy=0;
-	char *win_name=0;
+	Display *dipsy = nullptr;
+	char *win_name = nullptr;
 
-	dipsy = XOpenDisplay(0);
-	if (!dipsy)return;
+	dipsy = XOpenDisplay(nullptr);
+	if (!dipsy) return;
 
 	scrn = DefaultScreen(dipsy);
 	root = RootWindow(dipsy, scrn);
 
 	XQueryTree(dipsy, root, &r, &p, &kids, &numkids);
 
-
 	for (i = 0; i < numkids;  ++i)
 	{
         XFetchName(dipsy, kids[i], &win_name);
-        QString c(win_name);
+        QString c(QString::fromLatin1(win_name));
 
-        if (c == "kvkbd.login") {
+        if (c == QLatin1String("kvkbd.login")) {
             long wid = kids[i];
             XDestroyWindow(dipsy,wid);
             XFlush(dipsy);
@@ -76,18 +69,18 @@ int main(int argc, char **argv)
     KvkbdApp app(argc, argv);
 
     KLocalizedString::setApplicationDomain("kvkbd");
-    KAboutData about(QStringLiteral("kvkbd"), i18n("Kvkbd"), version, i18n(description),
+    KAboutData about(QLatin1String("kvkbd"), i18n("Kvkbd"), version, QLatin1String("A virtual keyboard for KDE"),
                      KAboutLicense::LGPL_V3, i18n("(C) 2007-2023 The Kvkbd Developers"));
-    about.addAuthor(i18n("Todor Gyumyushev"), i18n("Original Author"), "yodor1@gmail.com");
-    about.addAuthor(i18n("Guillaume Martres"), i18n("KDE4 port"), "smarter@ubuntu.com");
-    about.addAuthor(i18n("Anthony Fieroni"), i18n("Qt5 port"), "bvbfan@abv.bg");
-    about.addAuthor(i18n("Fredrick R. Brennan"), i18n("General maintenance"), "copypaste@kittens.ph");
-    QApplication::setWindowIcon(QIcon::fromTheme("preferences-desktop-keyboard"));
+    about.addAuthor(i18n("Todor Gyumyushev"), i18n("Original Author"), QLatin1String("yodor1@gmail.com"));
+    about.addAuthor(i18n("Guillaume Martres"), i18n("KDE4 port"), QLatin1String("smarter@ubuntu.com"));
+    about.addAuthor(i18n("Anthony Fieroni"), i18n("Qt5 port"), QLatin1String("bvbfan@abv.bg"));
+    about.addAuthor(i18n("Fredrick R. Brennan"), i18n("General maintenance"), QLatin1String("copypaste@kittens.ph"));
+    QApplication::setWindowIcon(QIcon::fromTheme(QLatin1String("preferences-desktop-keyboard")));
 
     KAboutData::setApplicationData(about);
 
     QCommandLineParser parser;
-    QCommandLineOption loginhelper("loginhelper", i18n("Stand alone version for use with KDM or XDM.\n"
+    QCommandLineOption loginhelper(QLatin1String("loginhelper"), i18n("Stand alone version for use with KDM or XDM.\n"
                                      "See Kvkbd Handbook for information on how to use this option."));
     parser.addHelpOption();
     parser.addVersionOption();

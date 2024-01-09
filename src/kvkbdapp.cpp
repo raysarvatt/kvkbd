@@ -22,7 +22,6 @@
 #include "kvkbdapp.h"
 
 #include <QDebug>
-#include <QDesktopWidget>
 #include <QDomDocument>
 #include <QFile>
 #include <QFontDialog>
@@ -43,40 +42,31 @@
 
 #include <KLocalizedString>
 
-#include <X11/Xatom.h>
-#include <X11/Xlib.h>
-
-#include <fixx11h.h>
-
 QList<VButton*> modKeys;
-
-#include <iostream>
-using namespace std;
 
 #define DEFAULT_WIDTH 	640
 #define DEFAULT_HEIGHT 	210
 
 #include "x11keyboard.h"
 
-
 void KvkbdApp::initGui(bool loginhelper)
 {
     is_login = loginhelper;
     signalMapper = new QSignalMapper(this);
-    connect(signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(buttonAction(const QString &)));
+    connect(signalMapper, SIGNAL(mappedString(const QString &)), this, SLOT(buttonAction(const QString &)));
 
-    widget = new ResizableDragWidget(0);
+    widget = new ResizableDragWidget(nullptr);
     widget->setContentsMargins(10,10,10,10);
-    widget->setProperty("name", "main");
+    widget->setProperty("name", QLatin1String("main"));
 
-    KConfigGroup cfg(KSharedConfig::openConfig(), "General");
+    KConfigGroup cfg(KSharedConfig::openConfig(), QLatin1String("General"));
 
     if (!is_login) {
         widget->setAttribute(Qt::WA_ShowWithoutActivating);
         widget->setAttribute(Qt::WA_DeleteOnClose, false);
     }
 
-    widget->setWindowFlags( Qt::ToolTip | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint );
+    widget->setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::BypassWindowManagerHint);
 
     dock = new KbdDock(widget->winId());
     connect(dock, SIGNAL(requestVisibility()), widget, SLOT(toggleVisibility()));
@@ -96,7 +86,7 @@ void KvkbdApp::initGui(bool loginhelper)
 
     QMenu *cmenu = tray->contextMenu();
 
-    QAction *chooseFontAction = new QAction(QIcon::fromTheme(QStringLiteral("preferences-desktop-font")), i18nc("@action:inmenu", "Choose Font..."), this);
+    QAction *chooseFontAction = new QAction(QIcon::fromTheme(QLatin1String("preferences-desktop-font")), i18nc("@action:inmenu", "Choose Font..."), this);
     connect(chooseFontAction, SIGNAL(triggered(bool)), this, SLOT(chooseFont()));
     cmenu->addAction(chooseFontAction);
 
@@ -149,19 +139,19 @@ void KvkbdApp::initGui(bool loginhelper)
     connect(themeLoader, SIGNAL(colorStyleChanged()), dock, SLOT(repaint()));
 
     KHelpMenu *helpMenu = new KHelpMenu(widget, KAboutData::applicationData());
-    helpMenu->menu()->setIcon(QIcon::fromTheme(QStringLiteral("help-about")));
+    helpMenu->menu()->setIcon(QIcon::fromTheme(QLatin1String("help-about")));
     cmenu->addMenu((QMenu*)helpMenu->menu());
 
-    QAction *quit = new QAction(QIcon::fromTheme(QStringLiteral("application-exit")), i18nc("@action:inmenu", "Quit"), this);
+    QAction *quit = new QAction(QIcon::fromTheme(QLatin1String("application-exit")), i18nc("@action:inmenu", "Quit"), this);
     cmenu->addAction(quit);
     connect(quit,SIGNAL(triggered(bool)), this, SLOT(quit()));
 
-    QString themeName = cfg.readEntry("layout", "standart");
+    QString themeName = cfg.readEntry("layout", "standard");
     themeLoader->loadTheme(themeName);
     widget->setProperty("layout", themeName);
 
     QSize defaultSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
-    QRect screenGeometry = QApplication::screens()[QApplication::desktop()->screenNumber()]->availableGeometry();
+    QRect screenGeometry = QGuiApplication::primaryScreen()->availableGeometry();
     qDebug() << "ScreenGeometry: " << screenGeometry;
 
     QPoint bottomRight = screenGeometry.bottomRight()-QPoint(defaultSize.width(), defaultSize.height());
@@ -196,7 +186,7 @@ void KvkbdApp::initGui(bool loginhelper)
     setQuitOnLastWindowClosed (is_login);
 
     connect(this, SIGNAL(aboutToQuit()), this, SLOT(storeConfig()));
-    emit fontUpdated(widget->font());
+    Q_EMIT fontUpdated(widget->font());
 
     if (dockVisible && !is_login) {
         dock->show();
@@ -209,14 +199,14 @@ void KvkbdApp::initGui(bool loginhelper)
         if (!vis ) {
             widget->showMinimized();
         }
-        widget->setWindowTitle("kvkbd");
+        widget->setWindowTitle(QLatin1String("kvkbd"));
         tray->show();
     } else {
         QTimer *timer = new QTimer(this);
         timer->setInterval(1000);
         connect(timer, SIGNAL(timeout()), widget, SLOT(raise()));
         timer->start();
-        widget->setWindowTitle("kvkbd.login");
+        widget->setWindowTitle(QLatin1String("kvkbd.login"));
     }
 }
 
@@ -226,7 +216,7 @@ KvkbdApp::~KvkbdApp()
 
 void KvkbdApp::storeConfig()
 {
-    KConfigGroup cfg(KSharedConfig::openConfig(), "General");
+    KConfigGroup cfg(KSharedConfig::openConfig(), QLatin1String("General"));
 
     cfg.writeEntry("visible", widget->isVisible());
     cfg.writeEntry("geometry", widget->geometry());
@@ -242,7 +232,7 @@ void KvkbdApp::storeConfig()
     cfg.writeEntry("autoresfont", widget->property("autoresfont").toBool());
     cfg.writeEntry("blurBackground", widget->property("blurBackground").toBool());
 
-    MainWidget *prt = parts.value("extension");
+    MainWidget *prt = parts.value(QLatin1String("extension"));
     if (prt) {
         cfg.writeEntry("extentVisible", prt->isVisible());
     }
@@ -253,7 +243,7 @@ void KvkbdApp::storeConfig()
 void KvkbdApp::autoResizeFont(bool mode)
 {
     widget->setProperty("autoresfont", QVariant(mode));
-    emit fontUpdated(widget->font());
+    Q_EMIT fontUpdated(widget->font());
 }
 
 void KvkbdApp::setStickyModKeys(bool mode)
@@ -276,7 +266,7 @@ void KvkbdApp::chooseFont()
     widgetFont = QFontDialog::getFont(&ok, widgetFont, widget);
     if (ok) {
         widget->setFont(widgetFont);
-        emit fontUpdated(widgetFont);
+        Q_EMIT fontUpdated(widgetFont);
     }
 
     if (restore) {
@@ -309,9 +299,6 @@ void KvkbdApp::buttonLoaded(VButton *btn)
 }
 void KvkbdApp::partLoaded(MainWidget *vPart, int total_rows, int total_cols)
 {
-    //cout << "Col Strech: " << total_cols << endl;
-    // cout << "Row Strech: " << total_rows << endl;
-
     QString partName = vPart->property("part").toString();
 
     int row_pos = 0;
@@ -324,7 +311,6 @@ void KvkbdApp::partLoaded(MainWidget *vPart, int total_rows, int total_cols)
     }
 
     layout->addWidget(vPart,row_pos,col_pos,total_rows,total_cols);
-    //cout << "Insert to layout: " << qPrintable(partName) << " RowStart: " << row_pos << " ColStart: " << col_pos << " RowSpan: " << total_rows << " ColSpan: " << total_cols << endl;
     parts.insert(partName, vPart);
     layoutPosition.insert(partName, QRect(col_pos,row_pos,total_cols,total_rows));
 
@@ -351,13 +337,13 @@ void KvkbdApp::keyProcessComplete(unsigned int)
 
 void KvkbdApp::buttonAction(const QString &action)
 {
-    if (QString::compare(action , "toggleVisibility")==0) {
+    if (QString::compare(action, QLatin1String("toggleVisibility"))==0) {
         if (!is_login) {
             widget->toggleVisibility();
         }
-    } else if (QString::compare(action , "toggleExtension")==0) {
+    } else if (QString::compare(action, QLatin1String("toggleExtension"))==0) {
         toggleExtension();
-    } else if (QString::compare(action, "shiftText")==0) {
+    } else if (QString::compare(action, QLatin1String("shiftText"))==0) {
         if (actionButtons.contains(action)) {
             QList<VButton*> buttons = actionButtons.values(action);
             QListIterator<VButton *> itr(buttons);
@@ -366,14 +352,14 @@ void KvkbdApp::buttonAction(const QString &action)
                 VButton *btn = itr.next();
                 if (btn->isCheckable() && btn->isChecked()) setShift=true;
             }
-            emit textSwitch(setShift);
+            Q_EMIT textSwitch(setShift);
         }
     }
 }
 
 void KvkbdApp::toggleExtension()
 {
-    MainWidget *prt = parts.value("extension");
+    MainWidget *prt = parts.value(QLatin1String("extension"));
     if (prt->isVisible()) {
         prt->hide();
         layout->removeWidget(prt);

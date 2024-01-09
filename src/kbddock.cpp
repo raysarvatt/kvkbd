@@ -31,20 +31,15 @@
 
 #include <KLocalizedString>
 
-#include "dockadaptor.h"
-
-#include <iostream>
-using namespace std;
-
 #define DEFAULT_WIDTH 	105
 #define DEFAULT_HEIGHT 	35
 
-KbdDock::KbdDock(const WId& window) : DragWidget(0), wID(window)
+KbdDock::KbdDock(const WId& window) : DragWidget(nullptr), wID(window)
 {
     setAttribute(Qt::WA_AlwaysShowToolTips);
     setAttribute(Qt::WA_DeleteOnClose, false);
 
-    setWindowFlags( Qt::ToolTip | Qt::FramelessWindowHint | Qt::X11BypassWindowManagerHint );
+    setWindowFlags(Qt::ToolTip | Qt::FramelessWindowHint | Qt::BypassWindowManagerHint );
 
     setFocusPolicy(Qt::NoFocus);
 
@@ -68,7 +63,7 @@ void KbdDock::paintEvent(QPaintEvent *)
 void KbdDock::mouseReleaseEvent(QMouseEvent *ev)
 {
      if (dragged && !moved) {
-        emit requestVisibility();
+        Q_EMIT requestVisibility();
      }
 
      DragWidget::mouseReleaseEvent(ev);

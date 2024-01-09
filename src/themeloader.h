@@ -31,7 +31,6 @@
 #include "mainwidget.h"
 #include "vbutton.h"
 
-
 class ThemeLoader : public QObject
 {
     Q_OBJECT
@@ -41,26 +40,22 @@ public:
     ~ThemeLoader();
 
     void loadTheme(QString& themeName);
-
     void loadColorFile(const QString& fileName);
-
     int loadLayout(const QString& themeName, const QString& path);
-
     void findColorStyles(QMenu *parent, const QString& selectedStyle);
 
 protected:
     void loadKeys(MainWidget *vPart, const QDomNode& wNode);
-    bool applyProperty(VButton *btn, const QString& attributeName, QDomNamedNodeMap *attributes, QVariant defaultValue="");
+    bool applyProperty(VButton *btn, const QString& attributeName, QDomNamedNodeMap *attributes, QVariant defaultValue = QString{});
 
     QMap<QString, int> widthMap;
     QMap<QString, int> heightMap;
     QMap<QString, int> spacingMap;
 
-public slots:
+public Q_SLOTS:
     void loadColorStyle();
 
-signals:
-
+Q_SIGNALS:
     void partLoaded(MainWidget *vPart, int total_rows, int total_cols);
     void buttonLoaded(VButton *btn);
     void colorStyleChanged();

@@ -9,14 +9,14 @@
 #include <QSize>
 #include <QString>
 #include <QTimer>
-#include "x11keyboard.h"
+#include "vkeyboard.h"
 
 class VButton : public QPushButton
 {
     Q_OBJECT
 
 public:
-    explicit VButton(QWidget *parent = 0);
+    explicit VButton(QWidget *parent = nullptr);
 
     void storeSize();
 
@@ -36,11 +36,11 @@ public:
     void setCaps(bool mode);
     void setShift(bool mode);
 
-signals:
+Q_SIGNALS:
     void keyClick(unsigned int);
     void buttonAction(const QString& action);
 
-public slots:
+public Q_SLOTS:
     void sendKey();
 
 protected:
@@ -49,7 +49,6 @@ protected:
 
     bool rightClicked;
     QTimer *keyTimer;
-
 
     ButtonText mButtonText;
     int mTextIndex;
@@ -60,9 +59,9 @@ protected:
     static int RepeatShortDelay;
     static int RepeatLongDelay;
 
-protected slots:
-    void mousePressEvent(QMouseEvent *e);
-    void mouseReleaseEvent(QMouseEvent *e);
+protected Q_SLOTS:
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
     void repeatKey();
 };
 

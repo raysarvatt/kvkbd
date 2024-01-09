@@ -18,19 +18,17 @@ class MainWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MainWidget(QWidget *parent = 0);
+    explicit MainWidget(QWidget *parent = nullptr);
     void setBaseSize(int w, int h);
 
-signals:
-
-public slots:
+public Q_SLOTS:
     void textSwitch(bool);
-    void updateLayout(__attribute__((unused)) int _layout_index, QString layout_name);
+    void updateLayout(int, const QString&);
     void updateGroupState(const ModifierGroupStateMap&);
-    void updateFont(const QFont& widgetFont);
+    void updateFont(const QFont&);
 
 protected:
-    virtual void resizeEvent(QResizeEvent *ev);
+    void resizeEvent(QResizeEvent *ev) override;
     QSize bsize;
 };
 

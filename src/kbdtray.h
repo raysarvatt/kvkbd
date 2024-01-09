@@ -28,14 +28,14 @@ class KbdTray : public QSystemTrayIcon
     Q_OBJECT
 
 public:
-    explicit KbdTray(QWidget* parent = 0);
+    explicit KbdTray(QWidget* parent = nullptr);
     ~KbdTray();
     QMenu* getContextMenu();
 
-public slots:
+public Q_SLOTS:
     void activationHandler(QSystemTrayIcon::ActivationReason reason);
 
-signals:
+Q_SIGNALS:
     void requestVisibility();
 };
 

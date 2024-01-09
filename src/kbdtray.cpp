@@ -21,17 +21,16 @@
 
 #include "kbdtray.h"
 
-#include <KIconLoader>
 #include <KLocalizedString>
 
 // TODO: find a way to hide the widget before asking for quit
 KbdTray::KbdTray(QWidget* parent) : QSystemTrayIcon(parent)
 {
     setObjectName("KvkbdTray");
-    setIcon(KIconLoader::global()->loadIcon("input-keyboard", KIconLoader::Small));
+    setIcon(QIcon::fromTheme(QLatin1String("input-keyboard")));
 
     setContextMenu(new QMenu);
-    contextMenu()->setTitle("Kvkbd");
+    contextMenu()->setTitle(QLatin1String("Kvkbd"));
 
     connect(this, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(activationHandler(QSystemTrayIcon::ActivationReason)));
 }
@@ -49,6 +48,6 @@ QMenu* KbdTray::getContextMenu()
 void KbdTray::activationHandler(QSystemTrayIcon::ActivationReason reason)
 {
     if (reason == QSystemTrayIcon::Trigger) {
-        emit requestVisibility();
+        Q_EMIT requestVisibility();
     }
 }

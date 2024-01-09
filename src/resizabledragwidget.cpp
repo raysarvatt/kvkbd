@@ -26,10 +26,6 @@
 
 #include <QMouseEvent>
 
-
-#include <iostream>
-using namespace std;
-
 ResizableDragWidget::ResizableDragWidget(QWidget *parent) :
     DragWidget(parent), doResize(false)
 {

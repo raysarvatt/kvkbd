@@ -6,9 +6,8 @@ VButton {
     margin:2px;
     padding:0px;
     border-style: outset;
-    
     border-width: 1px;
-    
+
     font-size:13px;
     font-weight:bold;
     background-color:rgba(172,172,172,70%);
@@ -33,11 +32,11 @@ VButton:hover {
 }
 
 VButton[action="toggleExtension"] {
-  background-color:gray;
-  border-color: gray;
+    background-color:gray;
+    border-color: gray;
 }
 
 VButton[action="toggleVisibility"] {
-  background-color:red;
-  border-color:red;
+    background-color:red;
+    border-color:red;
 }

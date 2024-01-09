@@ -10,22 +10,20 @@ class DragWidget : public QWidget
     Q_OBJECT
 
 public:
-    DragWidget(QWidget *parent = 0);
+    DragWidget(QWidget *parent = nullptr);
     ~DragWidget();
 
-public slots:
+public Q_SLOTS:
     void toggleVisibility();
     void blurBackground(bool blurEnabled);
     void setLocked(bool mode);
     bool isLocked();
 
 protected:
-    virtual void mouseMoveEvent(QMouseEvent * e);
-    virtual void mousePressEvent(QMouseEvent * e);
-    virtual void mouseReleaseEvent(QMouseEvent * e);
-
-    virtual void paintEvent(QPaintEvent *e);
-
+    void mouseMoveEvent(QMouseEvent * e) override;
+    void mousePressEvent(QMouseEvent * e) override;
+    void mouseReleaseEvent(QMouseEvent * e) override;
+    void paintEvent(QPaintEvent *e) override;
 
     QPoint dragPoint;
     QPoint gpress;
@@ -34,7 +32,7 @@ protected:
     bool moved;
     bool locked;
 
-signals:
+Q_SIGNALS:
     void widgetShown();
 };
 

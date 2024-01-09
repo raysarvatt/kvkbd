@@ -26,13 +26,11 @@ VButton::VButton(QWidget *parent) :
 void VButton::storeSize()
 {
     vpos = geometry();
-
 }
 
 QRect VButton::VRect()
 {
     return vpos;
-
 }
 
 void VButton::setKeyCode(unsigned int keyCode)
@@ -98,8 +96,8 @@ void VButton::updateText()
     if (mButtonText.count()<1)return;
 
     QString text = mButtonText.at(this->mTextIndex);
-    if (text == "&") {
-        text+="&";
+    if (text == QLatin1Char('&')) {
+        text += QLatin1Char('&');
     }
 
     bool doCaps = isCaps ;
@@ -116,12 +114,11 @@ void VButton::updateText()
 
 void VButton::sendKey()
 {
-    emit keyClick(this->keyCode);
+    Q_EMIT keyClick(this->keyCode);
 }
 
 void VButton::mousePressEvent(QMouseEvent *e)
 {
-
     QPushButton::mousePressEvent(e);
     rightClicked = false;
     if (e->button() == Qt::RightButton) {

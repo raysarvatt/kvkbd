@@ -3,17 +3,9 @@
 #include <QPainter>
 #include <QStyleOption>
 #include <QStylePainter>
-#include <QX11Info>
-
-#include <iostream>
-using namespace std;
-
 
 #include <X11/Xatom.h>
 #include <X11/Xlib.h>
-
-#include <fixx11h.h>
-
 
 DragWidget::DragWidget(QWidget *parent) :
     QWidget(parent),  dragged(false), moved(false), locked(false)
@@ -29,15 +21,17 @@ void DragWidget::blurBackground(bool blurEnabled)
 {
     this->setProperty("blurBackground", QVariant(blurEnabled));
 
-    Display *dpy = QX11Info::display();
+    Display *dpy = XOpenDisplay(nullptr);
     Atom net_wm_blur_region = XInternAtom(dpy, "_KDE_NET_WM_BLUR_BEHIND_REGION", False);
 
     if (blurEnabled) {
-        XChangeProperty(dpy, this->winId(), net_wm_blur_region, XA_CARDINAL, 32, PropModeReplace, 0, 0);
+        XChangeProperty(dpy, this->winId(), net_wm_blur_region, XA_CARDINAL, 32, PropModeReplace, nullptr, 0);
     } else {
-      XDeleteProperty(dpy, this->winId(), net_wm_blur_region);
+        XDeleteProperty(dpy, this->winId(), net_wm_blur_region);
     }
+
     repaint();
+    XCloseDisplay(dpy);
 }
 void DragWidget::setLocked(bool locked)
 {

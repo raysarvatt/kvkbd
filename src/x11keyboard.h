@@ -37,16 +37,16 @@ class X11Keyboard : public VKeyboard
     Q_OBJECT
 
 public:
-    X11Keyboard(QObject *parent=0);
-    virtual ~X11Keyboard();
-    void textForKeyCode(unsigned int keyCode, ButtonText& text);
+    X11Keyboard(QObject *parent = nullptr);
+    ~X11Keyboard();
+    void textForKeyCode(unsigned int keyCode, ButtonText& text) override;
 
-public slots:
-    virtual void processKeyPress(unsigned int);
-    virtual void queryModState();
-    virtual void constructLayouts();
-    virtual void layoutChanged();
-    virtual void start();
+public Q_SLOTS:
+    void processKeyPress(unsigned int) override;
+    void queryModState() override;
+    void constructLayouts() override;
+    void layoutChanged() override;
+    void start() override;
 
 protected:
     void sendKey(unsigned int keycode);

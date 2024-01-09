@@ -1,7 +1,6 @@
 #include "mainwidget.h"
 #include "vbutton.h"
 
-
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent)
 {
 }
@@ -42,10 +41,8 @@ void MainWidget::updateGroupState(const ModifierGroupStateMap& stateMap)
                         btn->setText(label);
                     }
                 }
-
             }
-            else if (QString::compare(group_name,"capslock")==0) {
-
+            else if (QString::compare(group_name, QLatin1String("capslock"))==0) {
                 btn->setCaps(state);
                 btn->updateText();
             }
@@ -55,7 +52,6 @@ void MainWidget::updateGroupState(const ModifierGroupStateMap& stateMap)
             }
         }
     }
-
 }
 
 void MainWidget::textSwitch(bool setShift)
@@ -69,15 +65,11 @@ void MainWidget::textSwitch(bool setShift)
     }
 
 }
-void MainWidget::updateLayout(int layout_idx, QString layout_name)
+void MainWidget::updateLayout(int, const QString& layout_name)
 {
     QObjectList buttons = this->children();
 
     VKeyboard *vkbd = (VKeyboard*)QObject::sender();
-
-    if (layout_idx > 0) {
-        qDebug() << "Ignoring layout_idx " << layout_idx;
-    }
 
     for (int a=0; a<buttons.count(); a++) {
 
@@ -90,7 +82,7 @@ void MainWidget::updateLayout(int layout_idx, QString layout_name)
             btn->updateText();
         }
 
-        if (btn->objectName()=="currentLayout") {
+        if (btn->objectName()==QLatin1String("currentLayout")) {
             btn->setText(layout_name);
         }
     }
@@ -122,7 +114,7 @@ void MainWidget::updateFont(const QFont& widgetFont)
     if ( parentWidget()->property("autoresfont").toBool() ) {
         fontSize = (8.0 / 500.0) * this->parentWidget()->size().width();
     }
-    QString buttonStyle = QString("VButton { font-family:'%1'; font-size: %2px; font-weight:%3; font-style: %4; }").arg(widgetFont.family()).arg(fontSize).arg(widgetFont.bold() ? "bold" : "normal").arg(widgetFont.italic() ? "italic" : "normal");
+    QString buttonStyle = QLatin1String("VButton { font-family:'%1'; font-size: %2px; font-weight:%3; font-style: %4; }").arg(widgetFont.family()).arg(fontSize).arg(widgetFont.bold() ? QLatin1String("bold") : QLatin1String("normal")).arg(widgetFont.italic() ? QLatin1String("italic") : QLatin1String("normal"));
     this->setStyleSheet(buttonStyle);
 
 }

@@ -1,1 +1,1 @@
-install( FILES standart.xml DESTINATION ${DATA_INSTALL_DIR}/kvkbd/themes)
+install(FILES standard.xml DESTINATION ${DATA_INSTALL_DIR}/kvkbd/themes)

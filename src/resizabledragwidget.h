@@ -8,14 +8,14 @@ class ResizableDragWidget : public DragWidget
     Q_OBJECT
 
 public:
-    explicit ResizableDragWidget(QWidget *parent = 0);
+    explicit ResizableDragWidget(QWidget *parent = nullptr);
     ~ResizableDragWidget();
 
 protected:
-    virtual void mouseMoveEvent(QMouseEvent * e);
-    virtual void mousePressEvent(QMouseEvent * e);
-    virtual void mouseReleaseEvent(QMouseEvent * e);
-    virtual void paintEvent(QPaintEvent *e);
+    void mouseMoveEvent(QMouseEvent * e) override;
+    void mousePressEvent(QMouseEvent * e) override;
+    void mouseReleaseEvent(QMouseEvent * e) override;
+    void paintEvent(QPaintEvent *e) override;
 
     bool doResize;
 };
