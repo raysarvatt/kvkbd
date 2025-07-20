@@ -49,5 +49,5 @@ find_package(KF${KF_VERSION} ${KF_MIN_VERSION} REQUIRED COMPONENTS
 
 find_package(LibXslt REQUIRED)
 
-add_subdirectory(doc)
+#add_subdirectory(doc)
 add_subdirectory(src)
