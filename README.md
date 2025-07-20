@@ -9,7 +9,7 @@ Virtual Keyboard for KDE
 
 ## Compile and install
 ```cmake
-git clone https://github.com/bvbfan/kvkbd
+git clone https://github.com/raysarvatt/kvkbd.git
 cd kvkbd
 mkdir build
 cd build
